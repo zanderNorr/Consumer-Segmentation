@@ -7,6 +7,7 @@ df = pd.read_csv("preprocessed_marketing_campaign.csv")
 
 x = df["Income"]
 
+#histogram of income w/ varying bin sizes
 bins = [10, 20, 30]
 columns = [0, 1, 2]
 average_income = statistics.mean(x)
@@ -28,10 +29,26 @@ for i, j in zip(columns, bins):
     axs[i].legend()
 plt.show()
 
+
+# #silverman rule of thumb:
+
+median = np.median(x)
+q1 = np.percentile(x, 25)
+q3 = np.percentile(x, 75)
+
+iqr = q3 - q1
+print(iqr)
+print(std_dev)
+h = 0.9 * min(std_dev, (iqr / 1.34)) * (len(x) ** -0.2)
+print(h)
+
+x.plot(kind = 'kde', bw_method = h)
+plt.show()
 #Kernel Density Estimation (KDE) Graph.
 bw = [0.025,0.05,0.1, 0.2]
 for bandwidth in bw:
     x.plot(kind = 'kde', bw_method = bandwidth)
+x.plot(kind = 'kde', bw_method = 'silverman')
 plt.legend(bw, title = 'Bandwidth Value')
 plt.xlim(0, max(x))
 plt.ticklabel_format(style='plain', axis='y') 
